@@ -1,0 +1,59 @@
+﻿
+
+@using myArcadeProject.App_Start
+
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+
+        <ul class="nav" id="side-menu">
+            
+                <!-- Creation du menu dynamique -->
+                @foreach (var rub in @MenuConfig.menu)
+                {
+                    <li id="menu" class="@Html.IsSelected(controller: @rub.controller, action: @rub.action)">
+                        <a href="@if (rub.srub.Count > 0 || rub.lien == "popup")
+                                { 
+                                    @Html.Raw('#');
+                                }
+                        else
+                        { @Url.Action(@rub.action, @rub.controller, new { id = @rub.parameter });
+                        }" @if (rub.lien == "popup")
+                        { @Html.Raw("data-toggle=\"modal\" data-target=" + @rub.action);
+                        }>
+                            <i class="@rub.icon"></i> <span class="nav-label">@rub.label</span>
+                            @if (rub.srub.Count > 0)
+                            {
+                                <span class="fa arrow"></span>
+                            }
+                        </a>
+                        @if (rub.srub.Count > 0)
+                        {
+                            <ul class="nav nav-second-level collapse @Html.IsSelected(controller: @rub.controller, cssClass: "in")">
+                            @foreach (var srub in rub.srub)
+                            {
+                                <li class="@Html.IsSelected(controller: @srub.controller, action: @srub.action, param: @srub.parameter)">
+                                    <a href="@if (srub.lien == "popup")
+                                    { @Html.Raw('#');
+                                    }
+                                    else
+                                    { @Url.Action(@srub.action, @srub.controller, new { id = @srub.parameter });
+                                    }" @if (rub.lien == "popup")
+                                    { @Html.Raw("data-toggle=\"modal\" data-target=" + @srub.action);
+                                    }>
+                                        @if (!String.IsNullOrEmpty(@srub.icon))
+                                        {
+                                            <i class="@srub.icon"></i>
+                                        }
+                                        <span class="nav-label">@srub.label</span>
+                                    </a>
+                                </li>
+                            }
+                            </ul>
+                        }
+                    </li>
+                }
+            
+        </ul>
+
+    </div>
+</nav>
